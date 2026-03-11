@@ -47,37 +47,12 @@
     '';
   };
 
-  # swaylock needs setuid on non-NixOS. This script sets it up once.
-  home.file."bin/setup-swaylock" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      set -euo pipefail
-
-      SWAYLOCK="$(command -v swaylock)"
-      if [ -z "$SWAYLOCK" ]; then
-        echo "swaylock not found in PATH"
-        exit 1
-      fi
-
-      # Copy to /usr/local/bin and set SUID so it can lock the session
-      echo "Copying swaylock to /usr/local/bin and setting permissions..."
-      sudo cp "$SWAYLOCK" /usr/local/bin/swaylock
-      sudo chmod u+s /usr/local/bin/swaylock
-
-      echo "Done. swaylock is now usable for screen locking."
-    '';
-  };
-
   # Extra packages useful on Ubuntu that NixOS provides at system level
   home.packages = with pkgs; [
     # Wayland session utilities
     niri
-    swaylock
     wl-clipboard
-    playerctl
     brightnessctl
-    waybar
 
     # System utilities (on NixOS these are in environment.systemPackages)
     fastfetch
